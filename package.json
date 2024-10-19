@@ -1,0 +1,35 @@
+{
+  "name": "mx.utxj.ti.awos.bienesraices",
+  "version": "1.0.0",
+  "description": "Proyecto de clase de la U2, de la asignatura AWOS utilizando node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angelJesus13/BienesRaices_230592A.git"
+  },
+  "keywords": [
+    "MVC",
+    "Express",
+    "Sequelize",
+    "MySQL",
+    "TailwindCSS",
+    "Nodemon",
+    "NodeJS",
+    "PUG",
+    "NodeMailer",
+    "Mailtrap",
+    "JWT"
+  ],
+  "author": "T.S.U Angel de Jesus Baños Tellez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/angelJesus13/BienesRaices_230592A/issues"
+  },
+  "homepage": "https://github.com/angelJesus13/BienesRaices_230592A#readme",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
