@@ -7,7 +7,7 @@ Para por demostrar y aprender cómo la creacion y consumo de Interfaces de Progr
 | No. | Descripción                                                      | Estatus   | Potenciador | Fecha |
 |-----|------------------------------------------------------------------|-----------|-------------|-------|
 | 8   | Repositorio del Proyecto implementando .git ignore| Finalizada ✅ |1| 17/OCT/2024 | 
-| 9   | Creacion de una Aplicación Web Usando Express | Finalizada ✅ |11| 17/OCT/2024 - ¿/OCT/2024 |
+| 9   | Creacion de una Aplicación Web Usando Express | Finalizada ✅ |12| 17/OCT/2024 - 22/OCT/2024 |
 
 
 
@@ -17,4 +17,5 @@ Para por demostrar y aprender cómo la creacion y consumo de Interfaces de Progr
 Unidad 2 <br>
 Aplicaciones Web Orientada a Servicios <br>
 Septiembre 2024 <br>
-
+### Tech Stack
+![NodeJS](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white) ![Express](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
