@@ -7,7 +7,7 @@ Para por demostrar y aprender cómo la creacion y consumo de Interfaces de Progr
 | No. | Descripción                                                      | Estatus   | Potenciador | Fecha |
 |-----|------------------------------------------------------------------|-----------|-------------|-------|
 | 8   | Repositorio del Proyecto implementando .git ignore| Finalizada ✅ |1| 17/OCT/2024 | 
-
+| 9   | Creacion de una Aplicación Web Usando Express | Activa ✅ |11| 17/OCT/2024 - ¿/OCT/2024 |
 
 
 
@@ -17,3 +17,4 @@ Para por demostrar y aprender cómo la creacion y consumo de Interfaces de Progr
 Unidad 2 <br>
 Aplicaciones Web Orientada a Servicios <br>
 Septiembre 2024 <br>
+
