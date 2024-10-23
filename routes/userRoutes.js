@@ -36,3 +36,4 @@ router.delete("/deleteUser/:email", function (req, res) {
     res.send(`Se a solicitado la eliminacion del usuario asociado al coreeo ${req.params.email}`)
 });
 export default router;
+
