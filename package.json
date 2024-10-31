@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Proyecto de clase de la U2, de la asignatura AWOS utilizando node.js",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
-    "saluda":"node saludar.js",
-    "server":"nodemon index.js"
+    "saluda": "node saludar.js",
+    "server": "nodemon index.js",
+    "css": "postcss public/css/tailwindcss.css -o public/css/app.css"
   },
   "repository": {
     "type": "git",
@@ -32,9 +33,14 @@
   },
   "homepage": "https://github.com/angelJesus13/BienesRaices_230592A#readme",
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "pug": "^3.0.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "autoprefixer": "^10.4.20",
+    "nodemon": "^3.1.7",
+    "postcss": "^8.4.47",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.14"
   }
 }
