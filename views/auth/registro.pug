@@ -1,0 +1,32 @@
+extends ../layout/index.pug
+
+block contenido 
+    .py-10 
+        h1.text-4xl.my-10.font-extrabold.text-center Bienes
+            span.font-normal Raices
+        h2.text-center.text-4xl.font-extrabold= pagina 
+
+        .mt-8.mx-auto.max-w-md 
+            .bg-white.py-4.px-4.shadow
+                form.space-y-5
+                    div 
+                        label.block.text-sm.uppercase.text-gray-300.mb-2.font-bold(for="nombre") Tu nombre
+                        input#nombre.w-full.px-3.py-2.border.border-gray-200.rounded-md.placeholder-gray-400(placeholder="Tu nombre" type="text" name="nombre")
+                    div 
+                        label.block.text-sm.uppercase.text-gray-300.mb-2.font-bold(for="email") Email de Registro
+                        input#nombre.w-full.px-3.py-2.border.border-gray-200.rounded-md.placeholder-gray-400(placeholder="Tu Email" type="email" name="email")
+                    div
+                        label.block.text-sm.uppercase.text-gray-300.mb-2.font-bold(for="password") Contraseña
+                        input#nombre.w-full.px-3.py-2.border.border-gray-200.rounded-md.placeholder-gray-400(placeholder="Tu Contraseña" type="password" name="password")  
+                    div 
+                        label.block.text-sm.uppercase.text-gray-300.mb-2.font-bold(for="confirmacion_password") Confirmacion de Contraseña
+                        input#nombre.w-full.px-3.py-2.border.border-gray-200.rounded-md.placeholder-gray-400(placeholder="Tu confirmacion de contraseña" type="password" name="confirmacion_password")
+
+                    .flex.item-center.justify-between   
+                        a.text-gray-500.text-xs(href="/auth/login") ¿Ya tienes cuenta? Inicia Sesion
+                        a.text-gray-500.text-xs(href="/auth/Olvide-Password") Olvide Mi Contraseña
+
+                    input(class="w-full bg-indigo-600 hover:bg-indigo-900 text-white font-bold py-3 cursor-pointer"  type="submit" value= "Crear tu Cuenta")
+
+
+    

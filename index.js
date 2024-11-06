@@ -1,22 +1,31 @@
-// index.js
-import express from "express";
-import generalRoutes from "./routes/generalRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
+//utiliza ECMASCRIPT modules, sintaxis mas moderna
+import express from 'express'
+import usuariosRoutes from './routes/userRoutes.js'
+//extraera la dependencia que se a instalado y la extraera en este archivo
+//CREAR LA APP
+//contendra toda la informacion de express la variable llamada "app"
+const app = express()
+//Routing
 
-const app = express();
+//Habilitar pug, set es para añadir informacion
+//en esta seccion estamos diciendole a pug que archivos quiero y de donde los va a extraer
+
+app.set('view engine', 'pug')
+app.set('views', './views');
+//Carpeta Pública
+
+app.use (express.static('public'))
+
+//Routing
+app.use('/auth', usuariosRoutes)//escanea las que inician con una diagonal
+
+//.send, .json, .render
+//solo se ejecuta si es .get, digamos que es nuestra URL
+
+//Definir un puerto para arrancar el proyecto
 const port = 3001;
 
-// Configuración del motor de plantillas
-app.set('view engine', 'pug');
-app.set('views', './views');
-
-// Registro de rutas sin prefijo "/auth"
-app.use("/", userRoutes); 
-app.use("/general", generalRoutes);
-
-app.use(express.static("./public"))
-
-// Inicia el servidor
-app.listen(port, () => {
-    console.log(`La aplicación ha iniciado en el puerto: ${port}`);
+app.listen(port, () =>{
+    console.log(`El servidor esta funcionando en el puerto: ${port}`)
 });
+
