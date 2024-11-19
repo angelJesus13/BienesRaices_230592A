@@ -1,40 +1,30 @@
-//utiliza ECMASCRIPT modules, sintaxis mas moderna
-import express from 'express'
-import usuariosRoutes from './routes/userRoutes.js'
-import db from './config/db.js';
+import express from 'express';
+import bodyParser from 'body-parser';
+import { formularioLogin, formularioRegistro, registrar, formularioOlvidePassword } from './controllers/usuarioController.js';
 
-try {
-    await db.authenticate();
-    console.log("Conexion Correcta a la Base de Datos")
-} catch (error) {
-    
-}
+const app = express();
 
-//extraera la dependencia que se a instalado y la extraera en este archivo
-//CREAR LA APP
-//contendra toda la informacion de express la variable llamada "app"
-const app = express()
-//Routing
 
-//Habilitar pug, set es para añadir informacion
-//en esta seccion estamos diciendole a pug que archivos quiero y de donde los va a extraer
+// Servir archivos estáticos desde la carpeta 'public'
+app.use(express.static('public'));
 
-app.set('view engine', 'pug')
+
+// Middlewares para parsear los datos de los formularios
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Configuración de las vistas
+app.set('view engine', 'pug');
 app.set('views', './views');
-//Carpeta Pública
 
-app.use (express.static('public'))
+// Rutas de la aplicación
+app.get('/auth/login', formularioLogin);
+app.get('/auth/registro', formularioRegistro);
+app.post('/auth/registro', registrar);
+app.get('/auth/Olvide-Password', formularioOlvidePassword);
 
-//Routing
-app.use('/auth', usuariosRoutes)//escanea las que inician con una diagonal
-
-//.send, .json, .render
-//solo se ejecuta si es .get, digamos que es nuestra URL
-
-//Definir un puerto para arrancar el proyecto
-const port = 3001;
-
-app.listen(port, () =>{
-    console.log(`El servidor esta funcionando en el puerto: ${port}`)
+// Resto de configuración de la aplicación
+app.listen(3001, () => {
+    console.log('Servidor corriendo en http://localhost:3001');
 });
 
