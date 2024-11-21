@@ -1,7 +1,7 @@
 extends ../layout/index.pug
 
 block contenido
-    .py-10 
+    .py-10.animate-fade-in
         h1.text-5xl.my-10.font-extrabold.text-center Bienes
             span.font-normal(style="color: #28a745") Raices
         h2.text-center.text-4xl.font-extrabold= pagina 
@@ -9,6 +9,7 @@ block contenido
         .mt-8.mx-auto.max-w-md 
             .bg-white.py-4.px-4.shadow
                 form.space-y-5(method="POST" action="/auth/login")
+                    input(type="hidden" name="_csrf" value= csrfToken)
                     div
                         label.block.text-sm.uppercase.text-gray-300.mb-2.font-bold(for="email") Email de Registro
                         input#email.w-full.px-3.py-2.border.border-gray-200.rounded-md.placeholder-gray-400(placeholder="Tu Email" type="email" name="email")
@@ -20,4 +21,4 @@ block contenido
                         a.text-gray-500.text-xs(href="/auth/registro") ¿No tienes cuenta? Regístrate
                         a.text-gray-500.text-xs(href="/auth/Olvide-Password") Olvidé Mi Contraseña
   
-                    input(class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 cursor-pointer", type="submit", value="Inicia Sesion")
+                    input(class="w-full bg-angelPaleta-custom-green hover:bg-angelPaleta-custom-green-hover text-white font-bold py-2 cursor-pointer", type="submit", value="Iniciar Sesion")

@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       animation: {
         'fade-in': 'fadeIn 2s ease-out',
-        'fade-out': 'fadeOut 10s ease-in-out forwards', // Aumentamos la duración
+        'fade-out': 'fadeOut 15s ease-in-out forwards',
       },
       keyframes: {
         fadeIn: {
@@ -17,7 +17,7 @@ module.exports = {
         },
         fadeOut: {
           '0%': { opacity: 1 },
-          '100%': { opacity: 0, display: 'none' }, // Correcto para eliminar espacio
+          '100%': { opacity: 0, display: 'none' },
         },
       },
       colors: {
@@ -26,6 +26,12 @@ module.exports = {
           'custom-green-hover': '#53A548',
           'custom-sea-green': '#4C934C',
         },
+      },
+      backgroundImage: {
+        'real-estate': 'linear-gradient(to right, #1e3c72, #2a5298)', // Azul sofisticado
+        'warm-sunset': 'linear-gradient(to bottom, #ff7e5f, #feb47b)', // Atardecer cálido
+        'green-growth': 'linear-gradient(to right, #56ab2f, #a8e063)', // Verde
+        'red-adv': 'linear-gradient(to right,   #ff0000 ,   #f16446   )', //rojo
       },
     },
   },

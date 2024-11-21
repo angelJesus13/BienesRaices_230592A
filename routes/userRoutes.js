@@ -3,7 +3,8 @@ import {
     formularioLogin,
     formularioRegistro,
     registrar,
-    formularioOlvidePassword
+    formularioOlvidePassword,
+    confirm
 } from '../controllers/usuarioController.js';
 
 const router = express.Router();
@@ -18,6 +19,9 @@ router.get('/registro', formularioRegistro);
 router.post('/registro', registrar);
 
 // Ruta para mostrar el formulario de Olvido de contraseña
-router.get('/Olvide-Password', formularioOlvidePassword);
+router.get('/olvide-Password', formularioOlvidePassword);
+
+// Ruta para confirmar la cuenta con el token
+router.get('/confirmAccount/:token', confirm);
 
 export default router;

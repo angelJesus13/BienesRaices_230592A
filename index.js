@@ -1,30 +1,35 @@
 import express from 'express';
+import csrf from 'csurf';
+import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import { formularioLogin, formularioRegistro, registrar, formularioOlvidePassword } from './controllers/usuarioController.js';
+import usuarioRoutes from './routes/userRoutes.js';  // Asegúrate de que la ruta sea correcta
+
 
 const app = express();
-
 
 // Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static('public'));
 
-
 // Middlewares para parsear los datos de los formularios
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+//habilitamos cookie parser
+
+app.use(cookieParser())
+
+//habilitar csrf
+
+app.use( csrf({cookie: true}))
 
 // Configuración de las vistas
 app.set('view engine', 'pug');
 app.set('views', './views');
 
 // Rutas de la aplicación
-app.get('/auth/login', formularioLogin);
-app.get('/auth/registro', formularioRegistro);
-app.post('/auth/registro', registrar);
-app.get('/auth/Olvide-Password', formularioOlvidePassword);
+app.use('/auth', usuarioRoutes);  // Asegúrate de usar '/auth' como prefijo para las rutas
 
 // Resto de configuración de la aplicación
 app.listen(3001, () => {
     console.log('Servidor corriendo en http://localhost:3001');
 });
-
