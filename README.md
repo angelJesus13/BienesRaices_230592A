@@ -10,6 +10,7 @@ Para por demostrar y aprender cómo la creacion y consumo de Interfaces de Progr
 | 9   | Creacion de una Aplicación Web Usando Express | Finalizada ✅ |12| 17/OCT/2024 - 22/OCT/2024 |
 | 10   | Operaciones basicas de una API a traves de los verbos HTTP | Finalizada ✅ |12| 22/OCT/2024 - 23/OCT/2024 |
 | 11   | Implementación de las Pantallas de Registro, Logeo y Recuperación de Contraseña| Finalizada ✅ |13| 23/OCT/2024 - 06/NOV/2024 |
+| 11   | Integracion de Funcionalidad de Creacion de cuentas de usuario| Finalizada ✅ |30| 06/NOV/2024 - 21/NOV/2024 |
 
 
 
