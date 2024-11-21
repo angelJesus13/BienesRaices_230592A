@@ -9,7 +9,7 @@ console.log('Conectando a la base de datos:', process.env.BD_NOMBRE);
 
 const db = new Sequelize(process.env.BD_NOMBRE, process.env.BD_USER, process.env.BD_PASSWORD, {
     host: process.env.BD_HOST,
-    port: 3306,  // Puerto por defecto de MySQL
+    port: 3306,  // Puerto por defecto de MySQL para la Basse de Datos
     dialect: 'mysql',
     define: {
         timestamps: true
