@@ -14,7 +14,7 @@ const formularioLogin = (req, res) => {
 const formularioRegistro = (req, res) => {
     res.render('auth/registro', {
         pagina: 'Crear Cuenta',
-        csrfToken : req.csrfToken()
+        csrfToken: req.csrfToken()
     });
 };
 
@@ -40,7 +40,7 @@ const registrar = async (req, res) => {
     if (!resultado.isEmpty()) {
         return res.render('auth/registro', {
             pagina: 'Crear Cuenta',
-            csrfToken : req.csrfToken(),
+            csrfToken: req.csrfToken(),
             errores: resultado.array(),
             usuario: {
                 nombre: req.body.nombre,
@@ -54,7 +54,7 @@ const registrar = async (req, res) => {
     if (existeUsuario) {
         return res.render('auth/registro', {
             pagina: 'Crear Cuenta',
-            csrfToken : req.csrfToken(),
+            csrfToken: req.csrfToken(),
             errores: [{ msg: 'El usuario ya está registrado.' }],
             usuario: {
                 nombre: req.body.nombre,
@@ -69,9 +69,14 @@ const registrar = async (req, res) => {
         nombre: req.body.nombre,
         email: req.body.email,
         password: req.body.password,
-        fecha_nacimiento: req.body.fecha_nacimiento,
+        fecha_nacimiento: req.body.fecha_nacimiento, // Aquí se guarda la fecha de nacimiento
         token
     });
+
+    console.log('Usuario creado:', usuario); // Verificar que el usuario y la fecha de nacimiento se están guardando correctamente
+
+    // Asegúrate de que la tabla esté sincronizada, si es necesario
+    await Usuario.sync({ alter: true });
 
     await emailRegistro({
         email: usuario.email,
