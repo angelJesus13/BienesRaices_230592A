@@ -25,6 +25,16 @@ const registrar = async (req, res) => {
     await check('password').isLength({ min: 6 }).withMessage('La contraseña debe ser de más de 6 caracteres').run(req);
     await check('confirmacion_password').equals(req.body.password).withMessage('La confirmación de la contraseña debe coincidir con la contraseña').run(req);
 
+    // Validación de la fecha de nacimiento
+    await check('fecha_nacimiento').custom((value) => {
+        const fechaNacimiento = new Date(value);
+        const edad = new Date().getFullYear() - fechaNacimiento.getFullYear();
+        if (edad < 18) {
+            throw new Error('Debes ser mayor de 18 años para registrarte.');
+        }
+        return true;
+    }).run(req);
+
     let resultado = validationResult(req);
 
     if (!resultado.isEmpty()) {
@@ -34,7 +44,8 @@ const registrar = async (req, res) => {
             errores: resultado.array(),
             usuario: {
                 nombre: req.body.nombre,
-                email: req.body.email
+                email: req.body.email,
+                fecha_nacimiento: req.body.fecha_nacimiento // Mantener la fecha en el formulario
             }
         });
     }
@@ -47,7 +58,8 @@ const registrar = async (req, res) => {
             errores: [{ msg: 'El usuario ya está registrado.' }],
             usuario: {
                 nombre: req.body.nombre,
-                email: req.body.email
+                email: req.body.email,
+                fecha_nacimiento: req.body.fecha_nacimiento
             }
         });
     }
@@ -57,6 +69,7 @@ const registrar = async (req, res) => {
         nombre: req.body.nombre,
         email: req.body.email,
         password: req.body.password,
+        fecha_nacimiento: req.body.fecha_nacimiento,
         token
     });
 
@@ -72,6 +85,7 @@ const registrar = async (req, res) => {
     });
 };
 
+// Confirmar cuenta
 const confirm = async (req, res) => {
     const { token } = req.params;
 
@@ -107,9 +121,6 @@ const confirm = async (req, res) => {
     }
 };
 
-
-
-
 // Mostrar formulario para recuperar contraseña
 const formularioOlvidePassword = (req, res) => {
     res.render('auth/Olvide-Password', {
@@ -117,6 +128,7 @@ const formularioOlvidePassword = (req, res) => {
     });
 };
 
+// Exportar las funciones
 export {
     formularioLogin,
     formularioRegistro,

@@ -89,12 +89,12 @@ const emailRegistro = async (datos) => {
                 <div class="email-content">
                     <h1>Bienes<span style="color: #4C934C;">Raices</span></h1>
                     <p>Hola ${nombre}, confirma tu cuenta en BienesRaices.com</p>
-                    <p>Tu cuenta ya está lista, solo debes confirmarla en el siguiente enlace:</p>
+                    <p>Te informamos que tu cuenta en BienesRaices ha sido creada con éxito. Para completar el proceso, por favor confirma tu cuenta haciendo clic en el siguiente enlace:</p>
                     <a href="${process.env.BACKEND_DOMAIN}:${process.env.BACKEND_PORT}/auth/confirmAccount/${token}" class="button">Confirmar tu cuenta</a>
 
-                    <p>Si tú no creaste esta cuenta, puedes <a href="#">ignorar este mensaje</a>.</p>
+                    <p>Si no fuiste tú quien creó esta cuenta, por favor ignora este mensaje.</p>
                     <div class="footer">
-                        <p>Gracias por confiar en nosotros. <br> BienesRaices.com</p>
+                        <p>Gracias por confiar en nosotros. Atentamente el CEO <br> BienesRaices.com</p>
                     </div>
                     <div class="image-container">
                         <img src="http://localhost:3001/img/signature_pandadoc.png" alt="Bienes Raices">
