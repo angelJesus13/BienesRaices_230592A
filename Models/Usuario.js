@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import sequelize from '../config/db.js'; // Asegúrate de importar tu conexión a la base de datos
+import bcrypt from 'bcrypt'; // Asegúrate de importar bcrypt
+import sequelize from '../config/db.js'; // Conexión a la base de datos
 
 const Usuario = sequelize.define('Usuario', {
     nombre: {
@@ -16,7 +17,7 @@ const Usuario = sequelize.define('Usuario', {
         allowNull: false
     },
     fecha_nacimiento: {
-        type: DataTypes.DATEONLY,  // Usamos DATEONLY para solo almacenar la fecha
+        type: DataTypes.DATEONLY,
         allowNull: false
     },
     token: {
@@ -26,9 +27,16 @@ const Usuario = sequelize.define('Usuario', {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
+}, {
+    hooks: {
+        beforeCreate: async function (usuario) {
+            const salt = await bcrypt.genSalt(10); 
+            usuario.password = await bcrypt.hash(usuario.password, salt);
+        }
+    }
 });
 
 // Sincroniza el modelo con la base de datos
-Usuario.sync({ alter: true });  // 'alter: true' se asegura de que se actualicen los cambios si ya existe la tabla
+Usuario.sync({ alter: true }); // 'alter: true' actualiza los cambios si la tabla ya existe
 
 export default Usuario;

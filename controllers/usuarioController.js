@@ -1,7 +1,8 @@
-import Usuario from '../Models/Usuarios.js';
+import Usuario from '../Models/Usuario.js'; // Importa el modelo de usuario
 import { check, validationResult } from 'express-validator';
+import bcrypt from 'bcrypt';
 import { generatetId } from '../helpers/tokens.js';
-import { emailRegistro } from '../helpers/emails.js';
+import { emailRegistro, emailChangePassword } from '../helpers/emails.js';
 
 // Mostrar formulario de login
 const formularioLogin = (req, res) => {
@@ -20,12 +21,11 @@ const formularioRegistro = (req, res) => {
 
 // Registrar un nuevo usuario con token
 const registrar = async (req, res) => {
+    // Realiza las validaciones
     await check('nombre').notEmpty().withMessage('El nombre no puede ir vacío').run(req);
     await check('email').isEmail().withMessage('El email debe ser válido').run(req);
     await check('password').isLength({ min: 6 }).withMessage('La contraseña debe ser de más de 6 caracteres').run(req);
     await check('confirmacion_password').equals(req.body.password).withMessage('La confirmación de la contraseña debe coincidir con la contraseña').run(req);
-
-    // Validación de la fecha de nacimiento
     await check('fecha_nacimiento').custom((value) => {
         const fechaNacimiento = new Date(value);
         const edad = new Date().getFullYear() - fechaNacimiento.getFullYear();
@@ -35,18 +35,13 @@ const registrar = async (req, res) => {
         return true;
     }).run(req);
 
-    let resultado = validationResult(req);
-
+    const resultado = validationResult(req);
     if (!resultado.isEmpty()) {
         return res.render('auth/registro', {
             pagina: 'Crear Cuenta',
             csrfToken: req.csrfToken(),
             errores: resultado.array(),
-            usuario: {
-                nombre: req.body.nombre,
-                email: req.body.email,
-                fecha_nacimiento: req.body.fecha_nacimiento // Mantener la fecha en el formulario
-            }
+            usuario: req.body
         });
     }
 
@@ -56,11 +51,7 @@ const registrar = async (req, res) => {
             pagina: 'Crear Cuenta',
             csrfToken: req.csrfToken(),
             errores: [{ msg: 'El usuario ya está registrado.' }],
-            usuario: {
-                nombre: req.body.nombre,
-                email: req.body.email,
-                fecha_nacimiento: req.body.fecha_nacimiento
-            }
+            usuario: req.body
         });
     }
 
@@ -69,15 +60,13 @@ const registrar = async (req, res) => {
         nombre: req.body.nombre,
         email: req.body.email,
         password: req.body.password,
-        fecha_nacimiento: req.body.fecha_nacimiento, // Aquí se guarda la fecha de nacimiento
+        fecha_nacimiento: req.body.fecha_nacimiento,
         token
     });
 
-    console.log('Usuario creado:', usuario); // Verificar que el usuario y la fecha de nacimiento se están guardando correctamente
+    console.log('Usuario creado:', usuario);
 
-    // Asegúrate de que la tabla esté sincronizada, si es necesario
-    await Usuario.sync({ alter: true });
-
+    // Enviar el correo de registro
     await emailRegistro({
         email: usuario.email,
         nombre: usuario.nombre,
@@ -93,12 +82,13 @@ const registrar = async (req, res) => {
 // Confirmar cuenta
 const confirm = async (req, res) => {
     const { token } = req.params;
+    console.log("Token recibido:", token);
 
     try {
-        const userWithToken = await Usuario.findOne({ where: { token } });
+        const usuario = await Usuario.findOne({ where: { token } });
+        console.log("Usuario encontrado:", usuario);
 
-        if (!userWithToken) {
-            console.log('Token inválido o expirado');
+        if (!usuario) {
             return res.render('auth/confirmAccount', {
                 pagina: 'Token inválido o expirado',
                 msg: 'El token no es válido o ha expirado. Verifica la liga enviada a tu correo.',
@@ -106,11 +96,11 @@ const confirm = async (req, res) => {
             });
         }
 
-        userWithToken.token = null;
-        userWithToken.confirmado = true;
-        await userWithToken.save();
+        usuario.token = null;
+        usuario.confirmado = true;
+        await usuario.save();
 
-        console.log('Cuenta confirmada exitosamente');
+        console.log("Cuenta confirmada");
         res.render('auth/confirmAccount', {
             pagina: 'Cuenta confirmada',
             msg: 'Tu cuenta ha sido confirmada exitosamente. Ahora puedes iniciar sesión.',
@@ -128,9 +118,136 @@ const confirm = async (req, res) => {
 
 // Mostrar formulario para recuperar contraseña
 const formularioOlvidePassword = (req, res) => {
-    res.render('auth/Olvide-Password', {
-        pagina: 'Recupera tu Cuenta por Contraseña Perdida'
+    res.render("auth/olvide-password", {      
+        pagina: 'Recuperar Contraseña',
+        csrfToken: req.csrfToken()
     });
+};
+
+// Procesar el formulario de olvido de contraseña
+const resetPassword = async (req, res) => {
+    await check('email').isEmail().withMessage('El correo debe ser válido revisa por favor tu correo').run(req);
+    let resultado = validationResult(req);
+    if (!resultado.isEmpty()) {
+        return res.render('auth/olvide-password', {
+            pagina: 'Recupera tu acceso a BienesRaices',
+            csrfToken: req.csrfToken(),
+            errores: resultado.array(),
+        });
+    }
+    
+    const { email } = req.body;
+    const usuario = await Usuario.findOne({ where: { email } });
+
+    if (!usuario) {
+        return res.render('auth/olvide-password', {
+            pagina: 'Recupera tu acceso a Bienes Raices',
+            csrfToken: req.csrfToken(),
+            errores: [{ msg: 'El correo no pertenece a ningún usuario, verifica tus datos' }]
+        });
+    }
+
+    // Generar un token y guardar el usuario
+    usuario.token = generatetId();
+    await usuario.save();
+
+    // Enviar el correo
+    await emailChangePassword({
+        email: usuario.email,
+        nombre: usuario.nombre,
+        token: usuario.token
+    });
+
+    // Renderizar el mensaje
+    res.render('templates/message', {
+        pagina: 'Restablece tu Contraseña',
+        msg: `Hemos enviado un correo a ${req.body.email} para la confirmación de la cuenta`
+    });
+};
+
+// Comprobar token para resetear contraseña
+const comprobarToken = async (req, res) => {
+    const { token } = req.params;
+
+    // Buscar el usuario con el token proporcionado
+    const usuario = await Usuario.findOne({
+        where: { token: token }
+    });
+
+    // Si no se encuentra el usuario, renderizar mensaje de error
+    if (!usuario) {
+        return res.render('auth/olvide-password', {
+            pagina: 'Restablece tu password',
+            mensaje: 'Hubo un error al validar tu información, intenta de nuevo',
+            error: true
+        });
+    }
+
+    // Mostrar formulario para modificar la contraseña
+    res.render('auth/reset-password', {
+        pagina: 'Restablece tu Contraseña',
+        csrfToken: req.csrfToken() 
+    });
+};
+
+// Cambiar la contraseña (Nueva contraseña)
+const nuevoPassword = async (req, res) => {
+    // Validar campos de contraseña y confirmación
+    await check('password')
+        .isLength({ min: 6 })
+        .withMessage('La contraseña debe tener al menos 6 caracteres')
+        .run(req);
+
+    await check('confirm_password')
+        .notEmpty()
+        .withMessage('La confirmación de la contraseña es obligatoria')
+        .custom((value, { req }) => value === req.body.password)
+        .withMessage('Las contraseñas no coinciden')
+        .run(req);
+
+        const resultado = validationResult(req);
+        if (!resultado.isEmpty()) {
+            return res.render('auth/olvide-password', {
+                pagina: 'Recupera tu acceso a BienesRaices',
+                csrfToken: req.csrfToken(),
+                errores: resultado.array(),
+            });
+        }        
+
+    const { token } = req.params;
+    const { password } = req.body;
+
+    try {
+        // Identificar quién hace el cambio
+        const usuario = await Usuario.findOne({ where: { token } });
+
+        if (!usuario) {
+            return res.render('auth/reset-password', {
+                pagina: 'Restablecer tu Contraseña',
+                csrfToken: req.csrfToken(),
+                errores: [{ msg: 'El token no es válido o ha expirado' }]
+            });
+        }
+
+        // Hashear la nueva contraseña
+        const salt = await bcrypt.genSalt(10);
+        usuario.password = await bcrypt.hash(password, salt);
+        usuario.token = null;
+
+        await usuario.save();
+
+        res.render('auth/confirmAccount', {
+            pagina: 'Contraseña Reestablecida',
+            msg: 'La contraseña se guardó correctamente'
+        });
+    } catch (error) {
+        console.error('Error al restablecer la contraseña:', error);
+        res.render('auth/reset-password', {
+            pagina: 'Restablecer tu Contraseña',
+            errores: [{ msg: 'Hubo un error al restablecer la contraseña. Intenta nuevamente más tarde.' }],
+            csrfToken: req.csrfToken(),
+        });
+    }
 };
 
 // Exportar las funciones
@@ -139,5 +256,8 @@ export {
     formularioRegistro,
     registrar,
     formularioOlvidePassword,
-    confirm
+    resetPassword,
+    confirm,
+    nuevoPassword, 
+    comprobarToken
 };

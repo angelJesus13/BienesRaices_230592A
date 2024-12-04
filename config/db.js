@@ -5,14 +5,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Verificar que las variables de entorno estén cargadas correctamente
-console.log('Conectando a la base de datos:', process.env.BD_NOMBRE);
+console.log('Conectando a la base de datos:', process.env.DB_NAME);
 
-const db = new Sequelize(process.env.BD_NOMBRE, process.env.BD_USER, process.env.BD_PASSWORD, {
-    host: process.env.BD_HOST,
-    port: 3306,  // Puerto por defecto de MySQL para la Basse de Datos
+// Configuración de la conexión a la base de datos con Sequelize
+const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: 3306,  // Puerto por defecto de MySQL
     dialect: 'mysql',
     define: {
-        timestamps: true
+        timestamps: true // Para que Sequelize agregue automáticamente las fechas de creación y actualización
     },
     pool: {
         max: 5,
@@ -20,14 +21,14 @@ const db = new Sequelize(process.env.BD_NOMBRE, process.env.BD_USER, process.env
         acquire: 30000,
         idle: 10000
     },
-    operatorAliases: false,
-    timezone: '-06:00',  
+    operatorAliases: false,  // Desactivar los alias de operadores antiguos
+    timezone: '-06:00',     // Zona horaria para la base de datos
     dialectOptions: {
-        timezone: 'local', // Configura la zona horaria del servidor
+        timezone: 'local',   // Configura la zona horaria local del servidor
     }
 });
 
-// Verificar la conexión
+// Verificar la conexión a la base de datos
 db.authenticate()
     .then(() => {
         console.log('Conexión exitosa a la base de datos');
@@ -37,3 +38,4 @@ db.authenticate()
     });
 
 export default db;
+
