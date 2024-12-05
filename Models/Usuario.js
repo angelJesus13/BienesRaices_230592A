@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import bcrypt from 'bcrypt'; // Asegúrate de importar bcrypt
+import bcrypt from 'bcrypt'; // Importar bcrypt
 import sequelize from '../config/db.js'; // Conexión a la base de datos
 
 const Usuario = sequelize.define('Usuario', {
@@ -32,11 +32,19 @@ const Usuario = sequelize.define('Usuario', {
         beforeCreate: async function (usuario) {
             const salt = await bcrypt.genSalt(10); 
             usuario.password = await bcrypt.hash(usuario.password, salt);
+        },
+        beforeUpdate: async function (usuario) {
+            // Si el campo password fue modificado
+            if (usuario.changed('password')) {
+                // Verificar si el password ya está hasheado
+                const isHashed = bcrypt.getRounds(usuario.password) > 0; // Revisa si tiene un salt válido
+                if (!isHashed) {
+                    const salt = await bcrypt.genSalt(10);
+                    usuario.password = await bcrypt.hash(usuario.password, salt);
+                }
+            }
         }
     }
 });
-
-// Sincroniza el modelo con la base de datos
-Usuario.sync({ alter: true }); // 'alter: true' actualiza los cambios si la tabla ya existe
 
 export default Usuario;
