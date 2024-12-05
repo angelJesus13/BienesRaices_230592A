@@ -11,6 +11,7 @@ Para por demostrar y aprender cómo la creacion y consumo de Interfaces de Progr
 | 10   | Operaciones basicas de una API a traves de los verbos HTTP | Finalizada ✅ |12| 22/OCT/2024 - 23/OCT/2024 |
 | 11   | Implementación de las Pantallas de Registro, Logeo y Recuperación de Contraseña| Finalizada ✅ |13| 23/OCT/2024 - 06/NOV/2024 |
 | 12   | Integracion de Funcionalidad de Creacion de cuentas de usuario| Finalizada ✅ |30| 06/NOV/2024 - 21/NOV/2024 |
+| 13   | Implementación de recupueración de contraseñas| Finalizada ✅ |20| 21/NOV/2024 - 5/DIC/2024 |
 
 
 
