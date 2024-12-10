@@ -7,13 +7,17 @@ import {
     resetPassword,
     confirm, 
     comprobarToken,
-    nuevoPassword
+    nuevoPassword,
+    userAuthentication
 } from '../controllers/usuarioController.js';
 
 const router = express.Router();
 
 // Ruta para mostrar el formulario de login
 router.get('/login', formularioLogin);
+
+//Metodo post 
+router.post('/login', userAuthentication)
 
 // Ruta para mostrar el formulario de registro
 router.get('/registro', formularioRegistro);

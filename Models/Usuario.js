@@ -18,7 +18,7 @@ const Usuario = sequelize.define('Usuario', {
     },
     fecha_nacimiento: {
         type: DataTypes.DATEONLY,
-        allowNull: false
+        allowNull: true
     },
     token: {
         type: DataTypes.STRING,
