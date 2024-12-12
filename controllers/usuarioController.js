@@ -226,6 +226,16 @@ const userAuthentication = async (req, res, next) => {
         });
     }
 
+    // Verificar si la cuenta está confirmada
+    if (!usuario.confirmado) {
+        return res.render('auth/login', {
+            pagina: 'Iniciar Sesión',
+            csrfToken: req.csrfToken(),
+            errores: [{ msg: 'Debes confirmar tu cuenta antes de iniciar sesión.' }],
+            usuario: req.body
+        });
+    }
+
     const isMatch = await bcrypt.compare(password, usuario.password);
     if (!isMatch) {
         return res.render('auth/login', {
@@ -247,8 +257,9 @@ const userAuthentication = async (req, res, next) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // Solo si es producción, asegurar que sea seguro
         sameSite: 'Strict',
-    }).redirect('/mis.propiedades');
+    }).redirect('/mis-propiedades');
 };
+
 
 export {
     formularioLogin,

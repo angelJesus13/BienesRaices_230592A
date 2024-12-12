@@ -3,7 +3,7 @@ import csrf from 'csurf';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import usuarioRoutes from './routes/userRoutes.js';  // Asegúrate de que la ruta sea correcta
-
+import propiedadesRoutes from './routes/propiedadesRoutes.js'; 
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.set('views', './views');
 
 // Rutas de la aplicación
 app.use('/auth', usuarioRoutes);  // Asegúrate de usar '/auth' como prefijo para las rutas
-
+app.use('/', propiedadesRoutes); 
 // Resto de configuración de la aplicación
 app.listen(3001, () => {
     console.log('Servidor corriendo en http://localhost:3001');
