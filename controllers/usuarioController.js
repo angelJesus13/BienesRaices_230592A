@@ -1,8 +1,7 @@
-import Usuario from '../Models/Usuario.js'; 
+import Usuario from '../Models/Usuario.js';
 import { check, validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { generatetId } from '../helpers/tokens.js';
+import { generarJWT, generatetId } from '../helpers/tokens.js';
 import { emailRegistro, emailChangePassword } from '../helpers/emails.js';
 
 // Mostrar formulario de login
@@ -20,7 +19,6 @@ const formularioRegistro = (req, res) => {
         csrfToken: req.csrfToken()
     });
 };
-//commit
 
 // Registrar un nuevo usuario
 const registrar = async (req, res) => {
@@ -197,10 +195,10 @@ const nuevoPassword = async (req, res) => {
     });
 };
 
+// Autenticar al usuario
 const userAuthentication = async (req, res, next) => {
     const { correo, password } = req.body;
 
-    // Log para verificar si la función se llama
     console.log('Intentando iniciar sesión con el correo:', correo);
 
     // Validación básica
@@ -238,15 +236,19 @@ const userAuthentication = async (req, res, next) => {
         });
     }
 
-    // Si la autenticación es exitosa, logueamos el resultado en consola en lugar de redirigir
-    console.log('Autenticación exitosa. Usuario ID:', usuario.id);
+    // Generar el JWT
+    const token = generarJWT(usuario.id);
 
-    // Puedes responder algo a la terminal o seguir con el flujo en espera
-    res.send('Autenticación exitosa, esperando la siguiente acción...');
+    // Imprimir el token en la consola
+    console.log('Token generado:', token);
+
+    // Almacenar el token en una cookie
+    res.cookie('_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Solo si es producción, asegurar que sea seguro
+        sameSite: 'Strict',
+    }).redirect('/mis.propiedades');
 };
-
-
-
 
 export {
     formularioLogin,
